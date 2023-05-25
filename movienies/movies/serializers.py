@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Movie, MovieRating
+from .models import Movie, MovieRating, MovieFavourites
 
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,3 +45,12 @@ class MovieRatingSerializer(serializers.ModelSerializer):
             'updated_date':{'required':False },
             'movie_rated_owner': {'required': False}
         }
+
+class FavouritedMovieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MovieFavourites
+        fields = ['id', 'favourited_owner', 'movie_title', 'movie_image', 'movie_id']
+
+    movie_title = serializers.CharField(default=None, source = 'favourited_movie.movie_title', read_only=True)
+    movie_image = serializers.ImageField(default = None, source = 'favourited_movie.movie_image', read_only=True)
+    movie_id = serializers.IntegerField(default = None, source = 'favourited_movie.id', ready_only = True)

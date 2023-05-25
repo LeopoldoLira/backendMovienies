@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .serializers import MovieSerializer, MovieRatingSerializer
-from .models import Movie, MovieRating
+from .serializers import MovieSerializer, MovieRatingSerializer, FavouritedMovieSerializer
+from .models import Movie, MovieRating, MovieFavourites
 from rest_framework import generics, permissions, status
 from rest_framework.views import  APIView
 from rest_framework.response import Response
@@ -101,3 +101,63 @@ class CreateReview(APIView):
             return Response(serializer.data, status = status.HTTP_200_OK)
             
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
+
+class GetFavourite(APIView):
+    """
+    Get the favourited movies from a user.
+    """
+
+    serializer_class = FavouritedMovieSerializer
+    permission_class = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        favourite = MovieFavourites.objects.filter(favourited_owner = request.user.id)
+        serializer = self.serializer_class(favourite, many = True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+    
+
+class CreateFavourite(APIView):
+    """
+    Create a favourite movie     
+    """
+
+    serializer_class = FavouritedMovieSerializer
+    permission_class = [permissions.IsAuthenticated]
+
+    def post(self, request, formate= None):
+        pk = request.data.get('movie_id', None)
+
+        if pk == None:
+            return Response({'response':'Please provide an ID'}, status = status.HTTP_400_BAD_REQUEST)
+        
+        movie_exists = Movie.objects.filter(id = pk).exists()
+
+        if not movie_exists:
+            return Response({'response':"Movie does not Exists"}, status = status.HTTP_404_NOT_FOUND)
+        
+        favourite_exists = MovieFavourites.objects.filter(favourited_owner = request.user.id, favourited_movie_id = pk).exists()
+        if not favourite_exists:
+            serializer = self.serializer_class(data={'favourited_movie':pk, 'favourited_owner':request.use.id})
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'response': 'Favourite Added Successfully.'}, status = status.HTTP_200_OK)
+            return Response(data={'response':'Favourite is Already Added'}, status = status.HTTP_200_OK)
+        
+
+class DeleteFavourite(APIView):
+    """
+    Delete a Favourite from the users's account.
+    """
+
+    serializer_class = FavouritedMovieSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, pk, format=None):
+        
+        favourite = MovieFavourites.objects.filter(favourited_owner = request.user.id, id=pk)
+        if favourite.exists():
+            favourite.delete()
+            return Response({'response':'Favourite Sucessfully deleted.'}, status = status.HTTP_200_OK)
+        else:
+            return Response({'response':'Favourite Does not exists'}, status = status.HTTP_404_NOT_FOUND)
