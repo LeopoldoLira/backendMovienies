@@ -17,3 +17,15 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.movie_title
+    
+
+class MovieRating(models.Model):
+    movie_rated_owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    movie_rated = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    movie_stars = models.IntegerField(default=1)
+    movie_comment = models.CharField(null=True, blank=True, max_length=255)
+    created_date = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_date = models.DateTimeField(auto_now=True, editable=False)
+
+    def __str__(self):
+        return f'{self.movie_rated.movie_title}'
