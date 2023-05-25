@@ -161,3 +161,81 @@ class DeleteFavourite(APIView):
             return Response({'response':'Favourite Sucessfully deleted.'}, status = status.HTTP_200_OK)
         else:
             return Response({'response':'Favourite Does not exists'}, status = status.HTTP_404_NOT_FOUND)
+        
+
+class MovieDetail(APIView):
+    """
+    Displays details for an specific movie.
+    """
+
+    serializer_class = MovieSerializer
+
+    def get_object(self, pk):
+        try:
+            return Movie.objects.get(pk=pk)
+        except Movie.DoesNotExist:
+            raise Http404
+        
+    def get(self, request, pk, format=None):
+        movie = self.get_object(pk)
+        serializer = self.serializer_class(movie)
+        return Response(serializer.data)
+    
+
+class CreatingMovie(APIView):
+    """
+    Creating a Movie.
+    """
+
+    serializer_class = MovieSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def put(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save(movie_owner = self.request.user)
+            return Response(serializer.data, status = status.HTTP_200_OK)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
+class UpdatingMovie(APIView):
+    """
+    Updating a specific Movie
+    """
+
+    serializer_class = MovieSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return Movie.objects.get(pk=pk)
+        except Movie.DoesNotExist:
+            raise Http404
+    
+    def put(self, request, pk, format=None):
+        movie = self.get_object(pk)
+        serializer = self.serializer_class(movie, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_200_OK)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteMovie(APIView):
+
+    """
+    Delete a Specific Movie.
+    """
+
+    serializer_class = MovieSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return Movie.objects.get(pk=pk)
+        except Movie.DoesNotExist:
+            raise Http404
+        
+    def delete(self, request, pk, format=None):
+        movie = self.get_object(pk)
+        movie.delete()
+        return Response(data={'Movie status':'Deleted'}, status = status.HTTP_200_OK)
