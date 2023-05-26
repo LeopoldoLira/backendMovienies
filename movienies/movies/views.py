@@ -78,7 +78,7 @@ class CreateReview(APIView):
         self._rateMovie = RateMovie()
 
     serializer_class = MovieRatingSerializer
-    permission_class = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     error = { 
             'response': ['You Already reviewed this movie.']
@@ -109,7 +109,7 @@ class GetFavourite(APIView):
     """
 
     serializer_class = FavouritedMovieSerializer
-    permission_class = [permissions.IsAuthenticated]
+    permissions_class = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
         favourite = MovieFavourites.objects.filter(favourited_owner = request.user.id)
