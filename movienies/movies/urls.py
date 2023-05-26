@@ -7,4 +7,8 @@ urlpatterns = [
     path('movies/create', views.CreatingMovie.as_view(), name='creatingMovie'),
     path('movies/update/<int:pk>', views.UpdatingMovie.as_view(), name='updatingMovie'),
     path('movies/delete/<int:pk>', views.DeleteMovie.as_view(), name='deleteMovie'),
+    path('movies/reviews/list', views.GetReview.as_view(), name='getReviews'),
+    path('movies/reviews/create', views.CreateReview.as_view(), name='createReviews'),
+    
 ]
+

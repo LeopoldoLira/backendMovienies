@@ -28,7 +28,7 @@ class MovieRating(models.Model):
     updated_date = models.DateTimeField(auto_now=True, editable=False)
 
     def __str__(self):
-        return f'{self.movie_rated.movie_title}'
+        return f'{self.movie_rated.movie_title} rated by {self.movie_rated_owner.username}'
 
 
 class MovieFavourites(models.Model):
