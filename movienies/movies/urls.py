@@ -3,5 +3,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('movies/', views.MovieList.as_view(), name='movies'),
-    path('movies/<int:pk>', views.MovieDetail.as_view(), name='movieDetails')
+    path('movies/<int:pk>', views.MovieDetail.as_view(), name='movieDetails'),
+    path('movies/create', views.CreatingMovie.as_view(), name='creatingMovie'),
+    path('movies/update/<int:pk>', views.UpdatingMovie.as_view(), name='updatingMovie'),
+    path('movies/delete/<int:pk>', views.DeleteMovie.as_view(), name='deleteMovie'),
 ]

@@ -53,4 +53,4 @@ class FavouritedMovieSerializer(serializers.ModelSerializer):
 
     movie_title = serializers.CharField(default=None, source = 'favourited_movie.movie_title', read_only=True)
     movie_image = serializers.ImageField(default = None, source = 'favourited_movie.movie_image', read_only=True)
-    movie_id = serializers.IntegerField(default = None, source = 'favourited_movie.id', ready_only = True)
+    movie_id = serializers.IntegerField(default = None, source = 'favourited_movie.id', read_only = True)

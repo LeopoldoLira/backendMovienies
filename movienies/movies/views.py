@@ -161,25 +161,6 @@ class DeleteFavourite(APIView):
             return Response({'response':'Favourite Sucessfully deleted.'}, status = status.HTTP_200_OK)
         else:
             return Response({'response':'Favourite Does not exists'}, status = status.HTTP_404_NOT_FOUND)
-        
-
-class MovieDetail(APIView):
-    """
-    Displays details for an specific movie.
-    """
-
-    serializer_class = MovieSerializer
-
-    def get_object(self, pk):
-        try:
-            return Movie.objects.get(pk=pk)
-        except Movie.DoesNotExist:
-            raise Http404
-        
-    def get(self, request, pk, format=None):
-        movie = self.get_object(pk)
-        serializer = self.serializer_class(movie)
-        return Response(serializer.data)
     
 
 class CreatingMovie(APIView):
