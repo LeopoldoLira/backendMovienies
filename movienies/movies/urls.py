@@ -9,6 +9,8 @@ urlpatterns = [
     path('movies/delete/<int:pk>', views.DeleteMovie.as_view(), name='deleteMovie'),
     path('movies/reviews/list', views.GetReview.as_view(), name='getReviews'),
     path('movies/reviews/create', views.CreateReview.as_view(), name='createReviews'),
-    
+    path('movies/favourites', views.GetFavourite.as_view(), name='getFavourites'),
+    path('movies/favourites/<int:pk>', views.DeleteFavourite.as_view(), name='deleteFavourites'),
+    path('movies/favourites/add', views.CreateFavourite.as_view(), name='createFavourites')
 ]
 

@@ -119,30 +119,29 @@ class GetFavourite(APIView):
 
 class CreateFavourite(APIView):
     """
-    Create a favourite movie     
+    Create a favourite for the user.
     """
-
     serializer_class = FavouritedMovieSerializer
-    permission_class = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, formate= None):
+    def post(self, request, format=None):
         pk = request.data.get('movie_id', None)
-
+        
         if pk == None:
             return Response({'response':'Please provide an ID'}, status = status.HTTP_400_BAD_REQUEST)
         
         movie_exists = Movie.objects.filter(id = pk).exists()
-
         if not movie_exists:
-            return Response({'response':"Movie does not Exists"}, status = status.HTTP_404_NOT_FOUND)
-        
+            return Response({'response':'Movie does not Exists'}, status = status.HTTP_400_BAD_REQUEST)
+
         favourite_exists = MovieFavourites.objects.filter(favourited_owner = request.user.id, favourited_movie_id = pk).exists()
         if not favourite_exists:
-            serializer = self.serializer_class(data={'favourited_movie':pk, 'favourited_owner':request.use.id})
+            serializer = self.serializer_class(data={'favourited_movie':pk, 'favourited_owner':request.user.id}) 
+            print(serializer)
             if serializer.is_valid():
                 serializer.save()
-                return Response({'response': 'Favourite Added Successfully.'}, status = status.HTTP_200_OK)
-            return Response(data={'response':'Favourite is Already Added'}, status = status.HTTP_200_OK)
+                return Response({'response': 'favourite added successfully.','status':2000}, status = status.HTTP_200_OK)
+        return Response(data={'response':'Favourited is already added', 'status':2001}, status = status.HTTP_200_OK)
         
 
 class DeleteFavourite(APIView):

@@ -49,7 +49,7 @@ class MovieRatingSerializer(serializers.ModelSerializer):
 class FavouritedMovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieFavourites
-        fields = ['id', 'favourited_owner', 'movie_title', 'movie_image', 'movie_id']
+        fields = ['id', 'favourited_owner', 'favourited_movie', 'movie_title', 'movie_image', 'movie_id']
 
     movie_title = serializers.CharField(default=None, source = 'favourited_movie.movie_title', read_only=True)
     movie_image = serializers.ImageField(default = None, source = 'favourited_movie.movie_image', read_only=True)
