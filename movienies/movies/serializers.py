@@ -39,12 +39,15 @@ class MovieRatingSerializer(serializers.ModelSerializer):
             'created_date',
             'updated_date'
         ]
+    
 
         extra_kwargs = {
             'created_date':{'required':False },
             'updated_date':{'required':False },
             'movie_rated_owner': {'required': False}
         }
+    
+    movie_rated_owner = serializers.CharField(default=None, source ='movie_rated_owner.username', read_only = True)
 
 class FavouritedMovieSerializer(serializers.ModelSerializer):
     class Meta:
