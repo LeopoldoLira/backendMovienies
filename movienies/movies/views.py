@@ -56,20 +56,10 @@ class GetReview(generics.ListAPIView):
 
     serializer_class = MovieRatingSerializer
 
-    def get_queryset(self):
-
-        query_set = MovieRating.objects.all().order_by('-created_date')
-
-        query_id_movie = self.request.query_params.get('idmovie', None)
-
-        if query_id_movie is not None:
-            try:
-                query_id_movie = int(query_id_movie)
-            except:
-                query_id_movie = 0
-
-            query_set = query_set.filter(movie__pk=query_id_movie)
-        return query_set
+    def get(self, request, pk, format = None):
+        review = MovieRating.objects.filter(movie_rated = pk)
+        serializer = self.serializer_class(review, many = True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
     
 
 class CreateReview(APIView):

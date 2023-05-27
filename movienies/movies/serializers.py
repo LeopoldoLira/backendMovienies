@@ -27,7 +27,7 @@ class MovieSerializer(serializers.ModelSerializer):
 
 
 class MovieRatingSerializer(serializers.ModelSerializer):
-    movie_rated_owner = serializers.ReadOnlyField(source='movie_rated_owner.username')
+    # movie_rated_owner = serializers.ReadOnlyField(source='movie_rated_owner.username')
     class Meta:
         model = MovieRating
         fields = [
